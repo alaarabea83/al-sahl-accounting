@@ -1,0 +1,10 @@
+{
+  "name": "تطبيق — سهل للحسابات",
+  "short_name": "learnDe",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#18204Aa",
+  "background_color": "#18204Aa",
+  "description": "تطبيق لتعلّم اللغة الألمانية (A1→C2). دروس صوتية، بطاقات ومهام تفاعلية."
+}

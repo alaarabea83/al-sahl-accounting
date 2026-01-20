@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#18204a" />
   <link rel="icon" type="image/png" href="accountant.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <title>السهل لإدارة الحسابات</title>
+  <title>سهل لإدارة الحسابات</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -43,9 +43,8 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
-      /* مهم للشاشات الصغيرة */
       padding-bottom: 1rem;
-      /* عشان آخر عنصر ما يختفيش */
+      border: none;
     }
 
     .sidebar.open {
@@ -107,6 +106,18 @@
       text-align: center;
     }
 
+    /* على الشاشات الكبيرة، خلي القائمة مفتوحة دائمًا */
+    @media (min-width: 992px) {
+      .sidebar {
+        right: 0 !important;
+        /* دائما مفتوحة */
+      }
+
+      #toggleSidebarBtn {
+        display: none;
+        /* نخفي زر القائمة على الكمبيوتر */
+      }
+    }
 
     /* ========================= Toggle Button ========================= */
     #toggleSidebarBtn {
@@ -198,7 +209,7 @@
 
 <body>
   <header>
-    <h2>السهل للحسابات</h2>
+    <h2>سهل لإدارة الحسابات</h2>
   </header>
 
   <button id="toggleSidebarBtn">☰</button>
@@ -207,7 +218,7 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <img src="accountant.png" alt="Logo" />
-      <h2>السهل للحسابات</h2>
+      <h2>سهل لإدارة الحسابات</h2>
     </div>
     <nav id="sidebarNav">
       <button onclick="showSection('customersSec')">
@@ -1056,6 +1067,22 @@
     </tr>
   `;
     }
+
+    function isMobile() {
+      return window.innerWidth < 992; // أقل من 992px يعتبر موبايل / تابليت
+    }
+
+    document.addEventListener("touchend", (e) => {
+      if (!isMobile()) return; // على الكمبيوتر تجاهل السحب
+      touchEndX = e.changedTouches[0].screenX;
+      const threshold = 50;
+      if (touchStartX - touchEndX > threshold) {
+        sidebar.classList.add("open");
+      } else if (touchEndX - touchStartX > threshold) {
+        sidebar.classList.remove("open");
+      }
+    });
+
 
   </script>
 </body>

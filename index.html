@@ -10,7 +10,9 @@
         background: #f9f9f9;
         margin: 0;
         padding: 0;
+        overflow-x: hidden;
       }
+
       header {
         background: #1f3a5f;
         color: #fff;
@@ -21,25 +23,99 @@
         margin: 0;
         font-size: 1.6rem;
       }
-      nav {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+
+      /* ========================= Sidebar ========================= */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100%;
         background: #2e86c1;
+        color: #fff;
+        transition: 0.3s;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
       }
-      nav button {
-        margin: 0.2rem;
-        padding: 0.5rem 1rem;
+      .sidebar.open {
+        right: 0;
+      }
+      .sidebar-header {
+        padding: 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+      }
+      .sidebar-header img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 0.5rem;
+        background: #fff;
+      }
+      .sidebar-header h2 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+      .sidebar nav {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem 0;
+      }
+      .sidebar nav button {
+        padding: 0.7rem 1rem;
+        margin: 0.2rem 0;
+        border: none;
+        background: transparent;
+        color: #fff;
+        text-align: right;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.2s;
+      }
+      .sidebar nav button:hover {
+        background: rgba(255,255,255,0.2);
+      }
+
+      .sidebar-footer {
+        padding: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .sidebar-footer button {
+        padding: 0.5rem;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        background: #1f3a5f;
         color: #fff;
-        background: #2e86c1;
       }
-      nav button:hover {
-        background: #1b4f72;
+      .sidebar-footer button:hover {
+        background: #154360;
       }
 
+      /* ========================= Toggle Button ========================= */
+      #toggleSidebarBtn {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1100;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        background: #1f3a5f;
+        color: #fff;
+        cursor: pointer;
+      }
+      #toggleSidebarBtn:hover {
+        background: #154360;
+      }
+
+      /* ========================= Sections ========================= */
       section {
         display: none;
         max-width: 900px;
@@ -97,8 +173,8 @@
       }
 
       .table-wrapper {
-        padding: 0 12px; /* يمنع اللزق في حافة الشاشة */
-        overflow-x: auto; /* مهم للموبايل */
+        padding: 0 12px;
+        overflow-x: auto;
       }
     </style>
   </head>
@@ -107,30 +183,46 @@
       <h1>السهل لإدارة الحسابات</h1>
     </header>
 
-    <nav>
-      <button onclick="showSection('customersSec')">العملاء</button>
-      <button onclick="showSection('customerStatementSec')">
-        كشف حساب
-      </button>
-      <button onclick="showSection('productsSec')">المنتجات</button>
-      <button onclick="showSection('salesSec')">المبيعات</button>
-      <button onclick="showSection('purchasesSec')">المشتريات</button>
-      <button onclick="showSection('incomesSec')">المقبوضات</button>
-      <button onclick="showSection('expensesSec')">المصروفات</button>
-      <button onclick="showSection('cashSec')">الخزنة</button>
-    </nav>
+    <button id="toggleSidebarBtn">☰</button>
 
+    <!-- ========================= Sidebar ========================= -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="icon-192.png" alt="Logo" />
+        <h2>السهل للحسابات</h2>
+      </div>
+      <nav>
+        <button onclick="showSection('customersSec')">العملاء</button>
+        <button onclick="showSection('customerStatementSec')">كشف حساب</button>
+        <button onclick="showSection('productsSec')">المنتجات</button>
+        <button onclick="showSection('salesSec')">المبيعات</button>
+        <button onclick="showSection('purchasesSec')">المشتريات</button>
+        <button onclick="showSection('incomesSec')">المقبوضات</button>
+        <button onclick="showSection('expensesSec')">المصروفات</button>
+        <button onclick="showSection('cashSec')">الخزنة</button>
+        <button onclick="showSection('aboutSec')">عن التطبيق</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button onclick="shareApp()">مشاركة التطبيق</button>
+      </div>
+    </div>
+
+    <!-- ========================= About Section ========================= -->
+    <section id="aboutSec">
+      <h2>عن التطبيق</h2>
+      <p>تطبيق "السهل لإدارة الحسابات" يساعدك على إدارة العملاء، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، والخزنة بكل سهولة.</p>
+      <p>الإصدار: 1.0.0</p>
+      <p>تطوير: علاء</p>
+    </section>
+
+    <!-- ========================= باقي الأقسام موجودة هنا ========================= -->
     <!-- العملاء -->
     <section id="customersSec">
       <h2>العملاء</h2>
       <h3>إضافة عميل جديد</h3>
       <div class="form-row">
         <input type="text" id="customerName" placeholder="اسم العميل أو المورد" />
-        <input
-          type="number"
-          id="openingBalance"
-          placeholder="الرصيد الافتتاحي"
-        />
+        <input type="number" id="openingBalance" placeholder="الرصيد الافتتاحي" />
         <button id="addCustomerBtn">إضافة</button>
       </div>
 
@@ -148,14 +240,12 @@
 
     <section id="customerStatementSec">
       <h2>كشف حساب عميل</h2>
-
       <div class="form-row">
         <select id="statementCustomer"></select>
         <input type="date" id="fromDate" />
         <input type="date" id="toDate" />
         <button onclick="renderCustomerStatement()">بحث</button>
       </div>
-
       <div class="table-wrapper">
         <table>
           <thead>
@@ -171,6 +261,9 @@
         </table>
       </div>
     </section>
+
+    <!-- باقي الأقسام مثل المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، الخزنة -->
+    <!-- نسخ الكود الأصلي لكل قسم كما هو مع الاحتفاظ بكل وظائف JavaScript -->
 
     <!-- المنتجات -->
     <section id="productsSec">
@@ -350,6 +443,53 @@
     </section>
 
     <script>
+      /* ========== Sidebar Toggle ================= */
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("toggleSidebarBtn");
+
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+      });
+
+      /* Swipe gesture support */
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      document.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+
+      document.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const threshold = 50; // الحد الأدنى للسحب
+        if (touchStartX - touchEndX > threshold) {
+          sidebar.classList.add("open"); // سحب لليسار يفتح القائمة
+        } else if (touchEndX - touchStartX > threshold) {
+          sidebar.classList.remove("open"); // سحب لليمين يغلق القائمة
+        }
+      }
+
+      /* ========================= Share App ========================= */
+      function shareApp() {
+        if (navigator.share) {
+          navigator.share({
+            title: 'السهل لإدارة الحسابات',
+            text: 'تطبيق رائع لإدارة الحسابات بسهولة!',
+            url: window.location.href
+          });
+        } else {
+          alert("نسخ الرابط: " + window.location.href);
+        }
+      }
+
+      /* ========================= باقي كود تطبيق الحسابات ========================= */
+      // هنا يمكنك نسخ كل كود JavaScript الأصلي كما أرسلته أنت سابقاً
+      // للزبائن، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، الخزنة، كشف الحساب...
+
       /* ========== البيانات ========== */
       let customers = [],
         products = [],
@@ -869,4 +1009,3 @@
     </script>
   </body>
 </html>
-<!--بلح-->

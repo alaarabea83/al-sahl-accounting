@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <title>السهل لإدارة الحسابات</title>
   <style>
     body {
@@ -113,6 +114,19 @@
       background: #154360;
     }
 
+    .sidebar nav button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar nav button i {
+      font-size: 1.1rem;
+      width: 22px;
+      text-align: center;
+    }
+
+
     /* ========================= Toggle Button ========================= */
     #toggleSidebarBtn {
       position: fixed;
@@ -211,20 +225,56 @@
   <!-- ========================= Sidebar ========================= -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <img src="icon-192.png" alt="Logo" />
+      <img src="accountant.png" alt="Logo" />
       <h2>السهل للحسابات</h2>
     </div>
     <nav id="sidebarNav">
-      <button onclick="showSection('customersSec')">العملاء</button>
-      <button onclick="showSection('customerStatementSec')">كشف حساب</button>
-      <button onclick="showSection('productsSec')">المنتجات</button>
-      <button onclick="showSection('salesSec')">المبيعات</button>
-      <button onclick="showSection('purchasesSec')">المشتريات</button>
-      <button onclick="showSection('incomesSec')">المقبوضات</button>
-      <button onclick="showSection('expensesSec')">المصروفات</button>
-      <button onclick="showSection('cashSec')">الخزنة</button>
-      <button onclick="showSection('aboutSec')">عن التطبيق</button>
+      <button onclick="showSection('customersSec')">
+        <i class="fa-solid fa-users"></i>
+        <span>العملاء</span>
+      </button>
+
+      <button onclick="showSection('customerStatementSec')">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>كشف حساب</span>
+      </button>
+
+      <button onclick="showSection('productsSec')">
+        <i class="fa-solid fa-box"></i>
+        <span>المنتجات</span>
+      </button>
+
+      <button onclick="showSection('salesSec')">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>المبيعات</span>
+      </button>
+
+      <button onclick="showSection('purchasesSec')">
+        <i class="fa-solid fa-truck"></i>
+        <span>المشتريات</span>
+      </button>
+
+      <button onclick="showSection('incomesSec')">
+        <i class="fa-solid fa-arrow-down"></i>
+        <span>المقبوضات</span>
+      </button>
+
+      <button onclick="showSection('expensesSec')">
+        <i class="fa-solid fa-arrow-up"></i>
+        <span>المصروفات</span>
+      </button>
+
+      <button onclick="showSection('cashSec')">
+        <i class="fa-solid fa-vault"></i>
+        <span>الخزنة</span>
+      </button>
+
+      <button onclick="showSection('aboutSec')">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>عن التطبيق</span>
+      </button>
     </nav>
+
   </div>
 
   <!-- ========================= Sections ========================= -->
@@ -233,10 +283,9 @@
     <p>تطبيق "السهل لإدارة الحسابات" يساعدك على إدارة العملاء، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات،
       والخزنة بكل سهولة.</p>
     <p>الإصدار: 1.0.0</p>
-    <p>تطوير: علاء</p>
+    <p>تطوير: علاء ربيع</p>
   </section>
 
-  <!-- ========================= باقي الأقسام موجودة هنا ========================= -->
   <!-- العملاء -->
   <section id="customersSec">
     <h2>العملاء</h2>
@@ -282,9 +331,6 @@
       </table>
     </div>
   </section>
-
-  <!-- باقي الأقسام مثل المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، الخزنة -->
-  <!-- نسخ الكود الأصلي لكل قسم كما هو مع الاحتفاظ بكل وظائف JavaScript -->
 
   <!-- المنتجات -->
   <section id="productsSec">
@@ -814,7 +860,7 @@
     /* ========== Init ========== */
     window.onload = function () {
       loadData();
-      showSection("customersSec");
+      showSection("aboutSec");
       renderCustomerSelects();
       renderCustomers();
       renderCustomerSelects();

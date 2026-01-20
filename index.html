@@ -37,6 +37,8 @@
         z-index: 1000;
         display: flex;
         flex-direction: column;
+        overflow-y: auto; /* مهم للشاشات الصغيرة */
+        padding-bottom: 1rem; /* عشان آخر عنصر ما يختفيش */
       }
       .sidebar.open {
         right: 0;
@@ -191,7 +193,7 @@
         <img src="icon-192.png" alt="Logo" />
         <h2>السهل للحسابات</h2>
       </div>
-      <nav>
+      <nav id="sidebarNav">
         <button onclick="showSection('customersSec')">العملاء</button>
         <button onclick="showSection('customerStatementSec')">كشف حساب</button>
         <button onclick="showSection('productsSec')">المنتجات</button>
@@ -207,7 +209,7 @@
       </div>
     </div>
 
-    <!-- ========================= About Section ========================= -->
+    <!-- ========================= Sections ========================= -->
     <section id="aboutSec">
       <h2>عن التطبيق</h2>
       <p>تطبيق "السهل لإدارة الحسابات" يساعدك على إدارة العملاء، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، والخزنة بكل سهولة.</p>
@@ -443,33 +445,40 @@
     </section>
 
     <script>
-      /* ========== Sidebar Toggle ================= */
       const sidebar = document.getElementById("sidebar");
       const toggleBtn = document.getElementById("toggleSidebarBtn");
 
+      // فتح/غلق القائمة بزر
       toggleBtn.addEventListener("click", () => {
         sidebar.classList.toggle("open");
       });
 
-      /* Swipe gesture support */
+      // إغلاق القائمة عند الضغط خارجها
+      document.addEventListener("click", (e) => {
+        if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+          sidebar.classList.remove("open");
+        }
+      });
+
+      // السحب على القائمة نفسها فقط
       let touchStartX = 0;
       let touchEndX = 0;
 
-      document.addEventListener("touchstart", (e) => {
+      sidebar.addEventListener("touchstart", (e) => {
         touchStartX = e.changedTouches[0].screenX;
       });
 
-      document.addEventListener("touchend", (e) => {
+      sidebar.addEventListener("touchend", (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
+        handleSidebarSwipe();
       });
 
-      function handleSwipe() {
-        const threshold = 50; // الحد الأدنى للسحب
+      function handleSidebarSwipe() {
+        const threshold = 50;
         if (touchStartX - touchEndX > threshold) {
-          sidebar.classList.add("open"); // سحب لليسار يفتح القائمة
+          sidebar.classList.add("open"); // سحب لليسار يفتح
         } else if (touchEndX - touchStartX > threshold) {
-          sidebar.classList.remove("open"); // سحب لليمين يغلق القائمة
+          sidebar.classList.remove("open"); // سحب لليمين يغلق
         }
       }
 
@@ -486,11 +495,12 @@
         }
       }
 
-      /* ========================= باقي كود تطبيق الحسابات ========================= */
-      // هنا يمكنك نسخ كل كود JavaScript الأصلي كما أرسلته أنت سابقاً
-      // للزبائن، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، الخزنة، كشف الحساب...
+      /* ========== التنقل بين الأقسام ========== */
+      function showSection(id) {
+        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
 
-      /* ========== البيانات ========== */
       let customers = [],
         products = [],
         sales = [],
@@ -539,14 +549,6 @@
           (cash.income || 0) -
           (cash.expenses || 0)
         ).toFixed(2);
-      }
-
-      /* ========== التنقل بين الأقسام ========== */
-      function showSection(id) {
-        document
-          .querySelectorAll("section")
-          .forEach((s) => s.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
       }
 
       /* ========== العملاء ========== */
@@ -1006,6 +1008,7 @@
     </tr>
   `;
       }
+
     </script>
   </body>
 </html>

@@ -1,413 +1,433 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#18204a" />
+    <link rel="icon" type="image/png" href="accountant.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <title>سهل لإدارة الحسابات</title>
+    <style>
+      /* ========== Base ========== */
+      * {
+        box-sizing: border-box;
+        transition: all 0.3s;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#18204a" />
-  <link rel="icon" type="image/png" href="accountant.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <title>سهل لإدارة الحسابات</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        overflow-x: hidden;
+      }
 
-    header {
-      background: #18204a;
-      color: #fff;
-      padding: 1px;
-      text-align: center;
-    }
+      h2 {
+        margin-bottom: 1rem;
+        color: #18204a;
+      }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.6rem;
-    }
+      header {
+        background: #18204a;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-    /* ========================= Sidebar ========================= */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: -250px;
-      width: 250px;
-      height: 100%;
-      background: #18204a;
-      color: #fff;
-      transition: 0.3s;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      padding-bottom: 1rem;
-      border: none;
-    }
-
-    .sidebar.open {
-      right: 0;
-    }
-
-    .sidebar-header {
-      padding: 1.5rem;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .sidebar-header img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-      background: #fff;
-    }
-
-    .sidebar-header h2 {
-      margin: 0;
-      font-size: 1.2rem;
-    }
-
-    .sidebar nav {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 0.5rem 0;
-    }
-
-    .sidebar nav button {
-      padding: 0.7rem 1rem;
-      margin: 0.2rem 0;
-      border: none;
-      background: transparent;
-      color: #fff;
-      text-align: right;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: 0.2s;
-    }
-
-    .sidebar nav button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .sidebar nav button {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sidebar nav button i {
-      font-size: 1.1rem;
-      width: 22px;
-      text-align: center;
-    }
-
-    /* على الشاشات الكبيرة، خلي القائمة مفتوحة دائمًا */
-    @media (min-width: 992px) {
-      .sidebar {
-        right: 0 !important;
-        /* دائما مفتوحة */
+      header h1 {
+        font-size: 1.5rem;
+        margin: 0;
       }
 
       #toggleSidebarBtn {
-        display: none;
-        /* نخفي زر القائمة على الكمبيوتر */
+        font-size: 1.4rem;
+        padding: 0.5rem 0.8rem;
+        border-radius: 5px;
+        border: none;
+        background: #1f3a5f;
+        color: #fff;
+        cursor: pointer;
       }
-    }
 
-    /* ========================= Toggle Button ========================= */
-    #toggleSidebarBtn {
-      position: relative;
-      bottom: 3rem;
-      right: 1rem;
-      z-index: 999;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      background: #1f3a5f;
-      color: #fff;
-      cursor: pointer;
-    }
+      #toggleSidebarBtn:hover {
+        background: #076dad;
+      }
 
-    #toggleSidebarBtn:hover {
-      background: #076dad;
-    }
+      /* ========== Sidebar ========== */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -260px;
+        width: 260px;
+        height: 100%;
+        background: #18204a;
+        color: #fff;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        padding-bottom: 1rem;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
 
-    /* ========================= Sections ========================= */
-    section {
-      display: none;
-      max-width: 900px;
-      margin: 2rem auto;
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+      .sidebar.open {
+        right: 0;
+      }
 
-    section.active {
-      display: block;
-    }
+      .sidebar-header {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
 
-    .form-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
+      .sidebar-header img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 0.5rem;
+        background: #fff;
+      }
 
-    .form-row input,
-    .form-row select {
-      flex: 1;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
+      .sidebar-header h2 {
+        font-size: 1.2rem;
+        margin: 0;
+        color: #fff;
+      }
 
-    .form-row button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background: #1f3a5f;
-      color: #fff;
-      transition: 0.3s;
-    }
+      .sidebar nav {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
+      }
 
-    .form-row button:hover {
-      background: #154360;
-    }
+      .sidebar nav button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.8rem 1rem;
+        border: none;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        text-align: right;
+        border-radius: 5px;
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
+      .sidebar nav button i {
+        width: 25px;
+        font-size: 1.2rem;
+        text-align: center;
+      }
 
-    table th,
-    table td {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
+      .sidebar nav button:hover,
+      .sidebar nav button.active {
+        background: #1f3a5f;
+      }
 
-    table th {
-      background: #2e86c1;
-      color: #fff;
-    }
+      /* ========== Sections ========== */
+      section {
+        display: none;
+        max-width: 1000px;
+        margin: 2rem auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      }
 
-    .table-wrapper {
-      padding: 0 12px;
-      overflow-x: auto;
-    }
-  </style>
-</head>
+      section.active {
+        display: block;
+      }
 
-<body>
-  <header>
-    <h2>سهل لإدارة الحسابات</h2>
-  </header>
+      .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
 
-  <button id="toggleSidebarBtn">☰</button>
+      .form-row input,
+      .form-row select {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
 
-  <!-- ========================= Sidebar ========================= -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <img src="accountant.png" alt="Logo" />
-      <h2>سهل لإدارة الحسابات</h2>
+      .form-row button {
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        background: #1f3a5f;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      .form-row button:hover {
+        background: #0f2b4c;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+      }
+
+      table th,
+      table td {
+        padding: 0.6rem;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+      }
+
+      table th {
+        background: #2e86c1;
+        color: #fff;
+      }
+
+      tbody tr:hover {
+        background: #f2f7ff;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+        padding: 0 0.5rem;
+      }
+
+      /* ========== Scrollbar ========== */
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+      }
+
+      /* ========== Responsive ========== */
+      @media (min-width: 992px) {
+        .sidebar {
+          right: 0 !important;
+        }
+
+        #toggleSidebarBtn {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>سهل لإدارة الحسابات</h1>
+      <button id="toggleSidebarBtn">☰</button>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="accountant.png" alt="Logo" />
+        <h2>سهل للحسابات</h2>
+      </div>
+      <nav id="sidebarNav">
+        <button onclick="showSection('customersSec')">
+          <i class="fa-solid fa-users"></i> العملاء
+        </button>
+        <button onclick="showSection('customerStatementSec')">
+          <i class="fa-solid fa-file-lines"></i> كشف حساب
+        </button>
+        <button onclick="showSection('productsSec')">
+          <i class="fa-solid fa-barcode"></i> المنتجات
+        </button>
+        <button onclick="showSection('salesSec')">
+          <i class="fa-solid fa-cash-register"></i> المبيعات
+        </button>
+        <button onclick="showSection('purchasesSec')">
+          <i class="fa-solid fa-cart-arrow-down"></i> المشتريات
+        </button>
+        <button onclick="showSection('incomesSec')">
+          <i class="fa-solid fa-arrow-down"></i> المقبوضات
+        </button>
+        <button onclick="showSection('expensesSec')">
+          <i class="fa-solid fa-arrow-up"></i> المصروفات
+        </button>
+        <button onclick="showSection('cashSec')">
+          <i class="fa-solid fa-hand-holding-dollar"></i> الخزنة
+        </button>
+        <button onclick="showSection('aboutSec')">
+          <i class="fa-solid fa-circle-info"></i> عن التطبيق
+        </button>
+      </nav>
     </div>
-    <nav id="sidebarNav">
-      <button onclick="showSection('customersSec')">
-        <i class="fa-solid fa-users"></i>
-        <span>العملاء</span>
-      </button>
 
-      <button onclick="showSection('customerStatementSec')">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>كشف حساب</span>
-      </button>
+    <!-- ========================= Sections ========================= -->
+    <section id="aboutSec">
+      <h2>عن التطبيق</h2>
+      <p>
+        تطبيق "السهل لإدارة الحسابات" يساعدك على إدارة العملاء، المنتجات،
+        المبيعات، المشتريات، المقبوضات، المصروفات، والخزنة بكل سهولة.
+      </p>
+      <p>الإصدار: 1.0.0</p>
+      <p>تطوير: علاء ربيع</p>
+    </section>
 
-      <button onclick="showSection('productsSec')">
-        <i class="fa-solid fa-barcode"></i>
-        <span>المنتجات</span>
-      </button>
+    <!-- هنا نفس باقي الأقسام مثل العملاء، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات، الخزنة مع نفس التنسيقات الحديثة -->
+    <!-- استخدم نفس HTML القديم لكل قسم كما عندك -->
 
-      <button onclick="showSection('salesSec')">
-        <i class="fa-solid fa-cash-register"></i>
-        <span>المبيعات</span>
-      </button>
+    <!-- العملاء -->
+    <section id="customersSec">
+      <h2>العملاء</h2>
+      <h3>إضافة عميل جديد</h3>
+      <div class="form-row">
+        <input
+          type="text"
+          id="customerName"
+          placeholder="اسم العميل أو المورد"
+        />
+        <input
+          type="number"
+          id="openingBalance"
+          placeholder="الرصيد الافتتاحي"
+        />
+        <button id="addCustomerBtn">إضافة</button>
+      </div>
 
-      <button onclick="showSection('purchasesSec')">
-        <i class="fa-solid fa-cart-arrow-down"></i>
-        <span>المشتريات</span>
-      </button>
-
-      <button onclick="showSection('incomesSec')">
-        <i class="fa-solid fa-arrow-down"></i>
-        <span>المقبوضات</span>
-      </button>
-
-      <button onclick="showSection('expensesSec')">
-        <i class="fa-solid fa-arrow-up"></i>
-        <span>المصروفات</span>
-      </button>
-
-      <button onclick="showSection('cashSec')">
-        <i class="fa-solid fa-hand-holding-dollar"></i>
-        <span>الخزنة</span>
-      </button>
-
-      <button onclick="showSection('aboutSec')">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>عن التطبيق</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- ========================= Sections ========================= -->
-  <section id="aboutSec">
-    <h2>عن التطبيق</h2>
-    <p>تطبيق "السهل لإدارة الحسابات" يساعدك على إدارة العملاء، المنتجات، المبيعات، المشتريات، المقبوضات، المصروفات،
-      والخزنة بكل سهولة.</p>
-    <p>الإصدار: 1.0.0</p>
-    <p>تطوير: علاء ربيع</p>
-  </section>
-
-  <!-- العملاء -->
-  <section id="customersSec">
-    <h2>العملاء</h2>
-    <h3>إضافة عميل جديد</h3>
-    <div class="form-row">
-      <input type="text" id="customerName" placeholder="اسم العميل أو المورد" />
-      <input type="number" id="openingBalance" placeholder="الرصيد الافتتاحي" />
-      <button id="addCustomerBtn">إضافة</button>
-    </div>
-
-    <h2>قائمة العملاء</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>اسم العميل</th>
-          <th>الرصيد الحالي</th>
-        </tr>
-      </thead>
-      <tbody id="customersTable"></tbody>
-    </table>
-  </section>
-
-  <section id="customerStatementSec">
-    <h2>كشف حساب عميل</h2>
-    <div class="form-row">
-      <select id="statementCustomer"></select>
-      <input type="date" id="fromDate" />
-      <input type="date" id="toDate" />
-      <button onclick="renderCustomerStatement()">بحث</button>
-    </div>
-    <div class="table-wrapper">
+      <h2>قائمة العملاء</h2>
       <table>
         <thead>
           <tr>
-            <th>التاريخ</th>
-            <th>البيان</th>
-            <th>مدين</th>
-            <th>دائن</th>
-            <th>الرصيد</th>
+            <th>اسم العميل</th>
+            <th>الرصيد الحالي</th>
           </tr>
         </thead>
-        <tbody id="customerStatementTable"></tbody>
+        <tbody id="customersTable"></tbody>
       </table>
-    </div>
-  </section>
+    </section>
 
-  <!-- المنتجات -->
-  <section id="productsSec">
-    <h2>المنتجات</h2>
-    <h3>إضافة منتج جديد</h3>
-    <div class="form-row">
-      <input type="text" id="productName" placeholder="اسم المنتج" />
-      <input type="number" id="productPrice" placeholder="السعر" />
-      <input type="number" id="productQty" placeholder="الكمية" />
-      <button id="addProductBtn">إضافة</button>
-    </div>
-    <h2>قائمة المنتجات</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>المنتج</th>
-          <th>الكمية</th>
-          <th>السعر</th>
-        </tr>
-      </thead>
-      <tbody id="productsTable"></tbody>
-    </table>
-  </section>
+    <section id="customerStatementSec">
+      <h2>كشف حساب عميل</h2>
+      <div class="form-row">
+        <select id="statementCustomer"></select>
+        <input type="date" id="fromDate" />
+        <input type="date" id="toDate" />
+        <button onclick="renderCustomerStatement()">بحث</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>البيان</th>
+              <th>مدين</th>
+              <th>دائن</th>
+              <th>الرصيد</th>
+            </tr>
+          </thead>
+          <tbody id="customerStatementTable"></tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- المبيعات -->
-  <section id="salesSec">
-    <h2>فواتير المبيعات</h2>
-    <h3>فاتورة جديدة</h3>
-    <div class="form-row">
-      <select id="invoiceCustomer"></select>
-      <div id="invoiceItems"></div>
-      <input type="number" id="paidAmount" placeholder="المبلغ المدفوع" />
-      <button id="addInvoiceItemBtn">إضافة صنف</button>
-      <button id="saveSaleBtn">حفظ الفاتورة</button>
-    </div>
-    <h3>سجل الفواتير</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>العميل</th>
-          <th>الإجمالي</th>
-          <th>المدفوع</th>
-          <th>المتبقي</th>
-          <th>التاريخ</th>
-        </tr>
-      </thead>
-      <tbody id="salesTable"></tbody>
-    </table>
-  </section>
+    <!-- المنتجات -->
+    <section id="productsSec">
+      <h2>المنتجات</h2>
+      <h3>إضافة منتج جديد</h3>
+      <div class="form-row">
+        <input type="text" id="productName" placeholder="اسم المنتج" />
+        <input type="number" id="productPrice" placeholder="السعر" />
+        <input type="number" id="productQty" placeholder="الكمية" />
+        <button id="addProductBtn">إضافة</button>
+      </div>
+      <h2>قائمة المنتجات</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+          </tr>
+        </thead>
+        <tbody id="productsTable"></tbody>
+      </table>
+    </section>
 
-  <!-- المشتريات -->
-  <section id="purchasesSec">
-    <h2>فواتير المشتريات</h2>
-    <h3>فاتورة جديده</h3>
-    <div class="form-row">
-      <select id="purchaseCustomer"></select>
-      <select id="purchaseProduct"></select>
-      <input type="number" id="purchaseQty" placeholder="الكمية" />
-      <input type="number" id="purchasePrice" placeholder="سعر الوحدة" />
-      <input type="number" id="purchasePaid" placeholder="المدفوع" />
-      <button id="savePurchaseBtn">حفظ المشتريات</button>
-    </div>
-    <div class="table-wrapper">
-      <h2>سجل الفواتير</h2>
+    <!-- المبيعات -->
+    <section id="salesSec">
+      <h2>فواتير المبيعات</h2>
+      <h3>فاتورة جديدة</h3>
+      <div class="form-row">
+        <select id="invoiceCustomer"></select>
+        <div id="invoiceItems"></div>
+        <input type="number" id="paidAmount" placeholder="المبلغ المدفوع" />
+        <button id="addInvoiceItemBtn">إضافة صنف</button>
+        <button id="saveSaleBtn">حفظ الفاتورة</button>
+      </div>
+      <h3>سجل الفواتير</h3>
       <table>
         <thead>
           <tr>
             <th>العميل</th>
-            <th>المنتج</th>
-            <th>الكمية</th>
-            <th>السعر</th>
+            <th>الإجمالي</th>
             <th>المدفوع</th>
             <th>المتبقي</th>
             <th>التاريخ</th>
           </tr>
         </thead>
-        <tbody id="purchasesTable"></tbody>
+        <tbody id="salesTable"></tbody>
       </table>
-    </div>
-  </section>
+    </section>
 
-  <!-- المقبوضات -->
-  <section id="incomesSec">
-    <h2>المقبوضات</h2>
-    <h3>إضافة سند قبض</h2>
+    <!-- المشتريات -->
+    <section id="purchasesSec">
+      <h2>فواتير المشتريات</h2>
+      <h3>فاتورة جديده</h3>
+      <div class="form-row">
+        <select id="purchaseCustomer"></select>
+        <select id="purchaseProduct"></select>
+        <input type="number" id="purchaseQty" placeholder="الكمية" />
+        <input type="number" id="purchasePrice" placeholder="سعر الوحدة" />
+        <input type="number" id="purchasePaid" placeholder="المدفوع" />
+        <button id="savePurchaseBtn">حفظ المشتريات</button>
+      </div>
+      <div class="table-wrapper">
+        <h2>سجل الفواتير</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>المنتج</th>
+              <th>الكمية</th>
+              <th>السعر</th>
+              <th>المدفوع</th>
+              <th>المتبقي</th>
+              <th>التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="purchasesTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- المقبوضات -->
+    <section id="incomesSec">
+      <h2>المقبوضات</h2>
+      <h3>إضافة سند قبض</h3>
       <div class="form-row">
         <input type="text" id="incomeTitle" placeholder="البيان" />
         <input type="number" id="incomeAmount" placeholder="المبلغ" />
@@ -426,665 +446,617 @@
         </thead>
         <tbody id="incomeTable"></tbody>
       </table>
-  </section>
+    </section>
 
-  <!-- المصروفات -->
-  <section id="expensesSec">
-    <h2>المصروفات</h2>
-    <h3>إضافة سند دفع</h3>
-    <div class="form-row">
-      <input type="text" id="expenseTitle" placeholder="البيان" />
-      <input type="number" id="expenseAmount" placeholder="المبلغ" />
-      <select id="expenseCustomer"></select>
-      <button id="addExpenseBtn">إضافة</button>
-    </div>
-    <h3>سجل الفواتير</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>البيان</th>
-          <th>المبلغ</th>
-          <th>العميل</th>
-          <th>التاريخ</th>
-        </tr>
-      </thead>
-      <tbody id="expenseTable"></tbody>
-    </table>
-  </section>
-
-  <!-- الخزنة -->
-  <section id="cashSec">
-    <h2>الخزنة</h2>
-    <div class="table-wrapper">
+    <!-- المصروفات -->
+    <section id="expensesSec">
+      <h2>المصروفات</h2>
+      <h3>إضافة سند دفع</h3>
+      <div class="form-row">
+        <input type="text" id="expenseTitle" placeholder="البيان" />
+        <input type="number" id="expenseAmount" placeholder="المبلغ" />
+        <select id="expenseCustomer"></select>
+        <button id="addExpenseBtn">إضافة</button>
+      </div>
+      <h3>سجل الفواتير</h3>
       <table>
         <thead>
           <tr>
             <th>البيان</th>
             <th>المبلغ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>الرصيد الافتتاحي</td>
-            <td id="cashOpening">0</td>
-          </tr>
-          <tr>
-            <td>إجمالي المقبوضات</td>
-            <td id="cashIncome">0</td>
-          </tr>
-          <tr>
-            <td>إجمالي المصروفات</td>
-            <td id="cashExpenses">0</td>
-          </tr>
-          <tr>
-            <td><b>الرصيد النهائي</b></td>
-            <td><b id="cashFinal">0</b></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <h3 style="margin-top: 1.5rem">كشف حركة الخزنة</h3>
-
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
+            <th>العميل</th>
             <th>التاريخ</th>
-            <th>البيان</th>
-            <th>مدين</th>
-            <th>دائن</th>
-            <th>الرصيد</th>
           </tr>
         </thead>
-        <tbody id="cashStatementTable"></tbody>
+        <tbody id="expenseTable"></tbody>
       </table>
-    </div>
-  </section>
+    </section>
 
-  <script>
-    const sidebar = document.getElementById("sidebar");
-    const toggleBtn = document.getElementById("toggleSidebarBtn");
+    <!-- الخزنة -->
+    <section id="cashSec">
+      <h2>الخزنة</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>البيان</th>
+              <th>المبلغ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>الرصيد الافتتاحي</td>
+              <td id="cashOpening">0</td>
+            </tr>
+            <tr>
+              <td>إجمالي المقبوضات</td>
+              <td id="cashIncome">0</td>
+            </tr>
+            <tr>
+              <td>إجمالي المصروفات</td>
+              <td id="cashExpenses">0</td>
+            </tr>
+            <tr>
+              <td><b>الرصيد النهائي</b></td>
+              <td><b id="cashFinal">0</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 style="margin-top: 1.5rem">كشف حركة الخزنة</h3>
 
-    // فتح/غلق القائمة بزر
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("open");
-    });
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>البيان</th>
+              <th>مدين</th>
+              <th>دائن</th>
+              <th>الرصيد</th>
+            </tr>
+          </thead>
+          <tbody id="cashStatementTable"></tbody>
+        </table>
+      </div>
+    </section>
 
-    // إغلاق القائمة عند الضغط خارجها
-    document.addEventListener("click", (e) => {
-      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
-        sidebar.classList.remove("open");
-      }
-    });
+    <script>
+      // ==================== Sidebar & Navigation ====================
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("toggleSidebarBtn");
 
-    // ========== غلق القائمة عند اختيار أي قسم ==========
-    document.querySelectorAll(".sidebar nav button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        sidebar.classList.remove("open");
+      // فتح/غلق القائمة بزر
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
       });
-    });
 
+      // إغلاق القائمة عند الضغط خارجها
+      document.addEventListener("click", (e) => {
+        if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+          sidebar.classList.remove("open");
+        }
+      });
 
-    sidebar.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    sidebar.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSidebarSwipe();
-    });
-
-    function handleSidebarSwipe() {
-      const threshold = 50;
-      if (touchEndX - touchStartX > threshold) {
-        sidebar.classList.remove("open"); // سحب لليمين يغلق
-      }
-    }
-
-    /* ========================= Share App ========================= */
-    function shareApp() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'السهل لإدارة الحسابات',
-          text: 'تطبيق رائع لإدارة الحسابات بسهولة!',
-          url: window.location.href
+      // إغلاق القائمة عند اختيار أي قسم (على الموبايل فقط)
+      document.querySelectorAll(".sidebar nav button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (window.innerWidth < 992) sidebar.classList.remove("open");
         });
-      } else {
-        alert("نسخ الرابط: " + window.location.href);
+      });
+
+      // التنقل بين الأقسام
+      function showSection(id) {
+        document
+          .querySelectorAll("section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
       }
-    }
 
-    /* ========== التنقل بين الأقسام ========== */
-    function showSection(id) {
-      document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-    }
+      // Sidebar swipe على الموبايل
+      let touchStartX = 0;
+      document.addEventListener("touchstart", (e) => {
+        touchStartX = e.touches[0].screenX;
+      });
+      document.addEventListener("touchend", (e) => {
+        if (window.innerWidth >= 992) return;
+        const touchEndX = e.changedTouches[0].screenX;
+        const threshold = 50;
+        if (touchStartX - touchEndX > threshold) {
+          sidebar.classList.add("open");
+        } else if (touchEndX - touchStartX > threshold) {
+          sidebar.classList.remove("open");
+        }
+      });
 
-    let customers = [],
-      products = [],
-      sales = [],
-      purchases = [],
-      incomes = [],
-      expenses = [];
-    let cash = { opening: 0, income: 0, expenses: 0 };
+      // ==================== Data Storage ====================
+      let customers = [];
+      let products = [];
+      let sales = [];
+      let purchases = [];
+      let incomes = [];
+      let expenses = [];
+      let cash = { opening: 0, income: 0, expenses: 0 };
 
-    /* ========== LocalStorage ========== */
-    function saveData() {
-      localStorage.setItem("customers", JSON.stringify(customers));
-      localStorage.setItem("products", JSON.stringify(products));
-      localStorage.setItem("sales", JSON.stringify(sales));
-      localStorage.setItem("purchases", JSON.stringify(purchases));
-      localStorage.setItem("incomes", JSON.stringify(incomes));
-      localStorage.setItem("expenses", JSON.stringify(expenses));
-      localStorage.setItem("cash", JSON.stringify(cash));
-    }
-    function loadData() {
-      customers = JSON.parse(localStorage.getItem("customers")) || [];
-      products = JSON.parse(localStorage.getItem("products")) || [];
-      sales = JSON.parse(localStorage.getItem("sales")) || [];
-      purchases = JSON.parse(localStorage.getItem("purchases")) || [];
-      incomes = JSON.parse(localStorage.getItem("incomes")) || [];
-      expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-      cash = JSON.parse(localStorage.getItem("cash")) || {
-        opening: 0,
-        income: 0,
-        expenses: 0,
+      function saveData() {
+        localStorage.setItem("customers", JSON.stringify(customers));
+        localStorage.setItem("products", JSON.stringify(products));
+        localStorage.setItem("sales", JSON.stringify(sales));
+        localStorage.setItem("purchases", JSON.stringify(purchases));
+        localStorage.setItem("incomes", JSON.stringify(incomes));
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+        localStorage.setItem("cash", JSON.stringify(cash));
+      }
+
+      function loadData() {
+        customers = JSON.parse(localStorage.getItem("customers")) || [];
+        products = JSON.parse(localStorage.getItem("products")) || [];
+        sales = JSON.parse(localStorage.getItem("sales")) || [];
+        purchases = JSON.parse(localStorage.getItem("purchases")) || [];
+        incomes = JSON.parse(localStorage.getItem("incomes")) || [];
+        expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+        cash = JSON.parse(localStorage.getItem("cash")) || {
+          opening: 0,
+          income: 0,
+          expenses: 0,
+        };
+      }
+
+      // ==================== Customers ====================
+      function renderCustomerSelects() {
+        const opts =
+          `<option value="">نقدي بدون عميل</option>` +
+          customers
+            .map((c, i) => `<option value="${i}">${c.name}</option>`)
+            .join("");
+        [
+          "invoiceCustomer",
+          "purchaseCustomer",
+          "incomeCustomer",
+          "expenseCustomer",
+        ].forEach((id) => {
+          const sel = document.getElementById(id);
+          if (sel) sel.innerHTML = opts;
+          const stSel = document.getElementById("statementCustomer");
+          if (stSel)
+            stSel.innerHTML = opts.replace("نقدي بدون عميل", "اختر العميل");
+        });
+      }
+
+      function renderCustomers() {
+        const tbody = document.getElementById("customersTable");
+        tbody.innerHTML = "";
+        customers.forEach((c) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${c.name}</td><td>${c.balance?.toFixed(2) || 0}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("addCustomerBtn").onclick = function () {
+        const name = document.getElementById("customerName").value.trim();
+        const balance = +document.getElementById("openingBalance").value || 0;
+        if (!name) {
+          alert("ادخل اسم العميل");
+          return;
+        }
+        customers.push({ name, openingBalance: balance, balance: balance });
+        document.getElementById("customerName").value = "";
+        document.getElementById("openingBalance").value = "";
+        renderCustomers();
+        renderCustomerSelects();
+        saveData();
       };
-    }
 
-    /* ========== عرض الخزنة ========== */
-    function renderCash() {
-      document.getElementById("cashOpening").innerText = (
-        cash.opening || 0
-      ).toFixed(2);
-      document.getElementById("cashIncome").innerText = (
-        cash.income || 0
-      ).toFixed(2);
-      document.getElementById("cashExpenses").innerText = (
-        cash.expenses || 0
-      ).toFixed(2);
-      document.getElementById("cashFinal").innerText = (
-        (cash.opening || 0) +
-        (cash.income || 0) -
-        (cash.expenses || 0)
-      ).toFixed(2);
-    }
-
-    /* ========== العملاء ========== */
-    function renderCustomerSelects() {
-      const opts =
-        `<option value="">نقدي بدون عميل</option>` +
-        customers
-          .map((c, i) => `<option value="${i}">${c.name}</option>`)
-          .join("");
-      [
-        "invoiceCustomer",
-        "purchaseCustomer",
-        "incomeCustomer",
-        "expenseCustomer",
-      ].forEach((id) => {
-        const sel = document.getElementById(id);
-        if (sel) sel.innerHTML = opts;
-        const stSel = document.getElementById("statementCustomer");
-        if (stSel)
-          stSel.innerHTML = opts.replace("نقدي بدون عميل", "اختر العميل");
-      });
-    }
-    function renderCustomers() {
-      const tbody = document.getElementById("customersTable");
-      tbody.innerHTML = "";
-      customers.forEach((c) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${c.name}</td><td>${c.balance?.toFixed(2) || 0}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("addCustomerBtn").onclick = function () {
-      const name = document.getElementById("customerName").value.trim();
-      const balance = +document.getElementById("openingBalance").value || 0;
-      if (!name) {
-        alert("ادخل اسم العميل");
-        return;
-      }
-      customers.push({ name, openingBalance: balance, balance: balance });
-      document.getElementById("customerName").value = "";
-      document.getElementById("openingBalance").value = "";
-      renderCustomers();
-      renderCustomerSelects();
-      saveData();
-    };
-
-    /* ========== المنتجات ========== */
-    function renderProducts() {
-      const tbody = document.getElementById("productsTable");
-      const purchaseSel = document.getElementById("purchaseProduct");
-      tbody.innerHTML = "";
-      if (purchaseSel) purchaseSel.innerHTML = "";
-      products.forEach((p, i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${p.name}</td><td>${p.qty}</td><td>${p.price.toFixed(2)}</td>`;
-        tbody.appendChild(tr);
-        if (purchaseSel)
-          purchaseSel.innerHTML += `<option value="${i}">${p.name}</option>`;
-      });
-    }
-    document.getElementById("addProductBtn").onclick = function () {
-      const name = document.getElementById("productName").value.trim();
-      const price = +document.getElementById("productPrice").value;
-      const qty = +document.getElementById("productQty").value;
-      if (!name) {
-        alert("ادخل اسم المنتج");
-        return;
-      }
-      products.push({ name, price, qty });
-      document.getElementById("productName").value = "";
-      document.getElementById("productPrice").value = "";
-      document.getElementById("productQty").value = "";
-      renderProducts();
-      saveData();
-    };
-
-    /* ========== المبيعات ========== */
-    function addInvoiceItem() {
-      const container = document.getElementById("invoiceItems");
-      container.innerHTML += `<select class="itemProduct">${products.map((p, i) => `<option value="${i}">${p.name}</option>`)}</select><input class="itemQty" type="number" placeholder="الكمية" min="1">`;
-    }
-    function renderSales() {
-      const tbody = document.getElementById("salesTable");
-      tbody.innerHTML = "";
-      sales.forEach((s) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${s.customer}</td><td>${s.total}</td><td>${s.paid}</td><td>${s.remaining}</td><td>${s.date}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("addInvoiceItemBtn").onclick = addInvoiceItem;
-    document.getElementById("saveSaleBtn").onclick = function () {
-      const container = document.getElementById("invoiceItems");
-      const paidAmount = +document.getElementById("paidAmount").value || 0;
-      const customerIndex = document.getElementById("invoiceCustomer").value;
-      const customer = customerIndex !== "" ? customers[customerIndex] : null;
-      let total = 0;
-      const itemProducts = container.querySelectorAll(".itemProduct");
-      const itemQtys = container.querySelectorAll(".itemQty");
-      itemProducts.forEach((sel, i) => {
-        let qty = +itemQtys[i].value;
-        const p = products[sel.value];
-        if (qty > p.qty) qty = p.qty;
-        p.qty -= qty;
-        total += qty * p.price;
-      });
-      if (customer) customer.balance += total - paidAmount;
-      cash.income += paidAmount;
-      sales.push({
-        customer: customer ? customer.name : "نقدي",
-        total,
-        paid: paidAmount,
-        remaining: total - paidAmount,
-        date: new Date().toLocaleDateString(),
-      });
-      container.innerHTML = "";
-      document.getElementById("paidAmount").value = "";
-      renderSales();
-      renderProducts();
-      renderCash();
-      renderCashStatement();
-      saveData();
-    };
-
-    /* ========== المشتريات ========== */
-    function renderPurchases() {
-      const tbody = document.getElementById("purchasesTable");
-      tbody.innerHTML = "";
-      purchases.forEach((p) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${p.customer}</td><td>${p.product}</td><td>${p.qty}</td><td>${p.price}</td><td>${p.paid}</td><td>${p.remaining}</td><td>${p.date}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("savePurchaseBtn").onclick = function () {
-      const prod = products[document.getElementById("purchaseProduct").value];
-      const qty = +document.getElementById("purchaseQty").value;
-      const price = +document.getElementById("purchasePrice").value;
-      const paid = +document.getElementById("purchasePaid").value;
-      const customerIndex = document.getElementById("purchaseCustomer").value;
-      const customer = customerIndex !== "" ? customers[customerIndex] : null;
-      if (!prod) {
-        alert("اختر منتج");
-        return;
-      }
-      prod.qty += qty;
-      if (customer) customer.balance -= qty * price;
-      cash.income -= paid;
-      purchases.push({
-        product: prod.name,
-        qty,
-        price,
-        paid,
-        customer: customer ? customer.name : "نقدي",
-        remaining: qty * price - paid,
-        date: new Date().toLocaleDateString(),
-      });
-      document.getElementById("purchaseQty").value = "";
-      document.getElementById("purchasePrice").value = "";
-      document.getElementById("purchasePaid").value = "";
-      document.getElementById("purchaseCustomer").value = "";
-      renderPurchases();
-      renderProducts();
-      renderCash();
-      renderCashStatement();
-      saveData();
-    };
-
-    /* ========== المقبوضات ========== */
-    function renderIncome() {
-      const tbody = document.getElementById("incomeTable");
-      tbody.innerHTML = "";
-      incomes.forEach((i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${i.title}</td><td>${i.amount}</td><td>${i.customer}</td><td>${i.date}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("addIncomeBtn").onclick = function () {
-      const title = document.getElementById("incomeTitle").value.trim();
-      const amount = +document.getElementById("incomeAmount").value;
-      const customerIndex = document.getElementById("incomeCustomer").value;
-      const customer = customerIndex !== "" ? customers[customerIndex] : null;
-      if (!title || !amount) {
-        alert("اكمل البيانات");
-        return;
-      }
-      if (customer) customer.balance -= amount;
-      cash.income += amount;
-      incomes.push({
-        title,
-        amount,
-        customer: customer ? customer.name : "نقدي",
-        date: new Date().toLocaleDateString(),
-      });
-      document.getElementById("incomeTitle").value = "";
-      document.getElementById("incomeAmount").value = "";
-      document.getElementById("incomeCustomer").value = "";
-      renderIncome();
-      renderCash();
-      renderCashStatement();
-      saveData();
-    };
-
-    /* ========== المصروفات ========== */
-    function renderExpenses() {
-      const tbody = document.getElementById("expenseTable");
-      tbody.innerHTML = "";
-      expenses.forEach((e) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${e.title}</td><td>${e.amount.toFixed(2)}</td><td>${e.customer}</td><td>${e.date}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("addExpenseBtn").onclick = function () {
-      const title = document.getElementById("expenseTitle").value.trim();
-      const amount = +document.getElementById("expenseAmount").value;
-      const customerIndex = document.getElementById("expenseCustomer").value;
-      const customer = customerIndex !== "" ? customers[customerIndex] : null;
-      if (!title || !amount) {
-        alert("اكمل البيانات");
-        return;
-      }
-      if (customer) customer.balance += amount;
-      cash.expenses += amount;
-      expenses.push({
-        title,
-        amount,
-        customer: customer ? customer.name : "نقدي",
-        date: new Date().toLocaleDateString(),
-      });
-      document.getElementById("expenseTitle").value = "";
-      document.getElementById("expenseAmount").value = "";
-      document.getElementById("expenseCustomer").value = "";
-      renderExpenses();
-      renderCash();
-      renderCashStatement();
-      renderCustomerSelects();
-      saveData();
-    };
-
-    /* ========== Init ========== */
-    window.onload = function () {
-      loadData();
-      showSection("aboutSec");
-      renderCustomerSelects();
-      renderCustomers();
-      renderCustomerSelects();
-      renderProducts();
-      renderSales();
-      renderPurchases();
-      renderIncome();
-      renderExpenses();
-      renderCash();
-      renderCashStatement();
-    };
-
-    function renderCustomerStatement() {
-      const customerIndex =
-        document.getElementById("statementCustomer").value;
-      const from = document.getElementById("fromDate").value;
-      const to = document.getElementById("toDate").value;
-      const tbody = document.getElementById("customerStatementTable");
-
-      if (customerIndex === "") {
-        alert("اختر العميل");
-        return;
+      // ==================== Products ====================
+      function renderProducts() {
+        const tbody = document.getElementById("productsTable");
+        const purchaseSel = document.getElementById("purchaseProduct");
+        tbody.innerHTML = "";
+        if (purchaseSel) purchaseSel.innerHTML = "";
+        products.forEach((p, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${p.name}</td><td>${p.qty}</td><td>${p.price.toFixed(2)}</td>`;
+          tbody.appendChild(tr);
+          if (purchaseSel)
+            purchaseSel.innerHTML += `<option value="${i}">${p.name}</option>`;
+        });
       }
 
-      const customer = customers[customerIndex];
-      tbody.innerHTML = "";
-
-      let balance = customer.openingBalance || 0;
-
-      // الرصيد الافتتاحي
-      tbody.innerHTML += `
-    <tr>
-      <td>-</td>
-      <td>رصيد افتتاحي</td>
-      <td>-</td>
-      <td>-</td>
-      <td>${balance.toFixed(2)}</td>
-    </tr>
-  `;
-
-      let rows = [];
-
-      // المبيعات
-      sales.forEach((s) => {
-        if (s.customer === customer.name) {
-          rows.push({
-            date: s.date,
-            desc: "فاتورة بيع",
-            debit: s.total,
-            credit: s.paid,
-          });
+      document.getElementById("addProductBtn").onclick = function () {
+        const name = document.getElementById("productName").value.trim();
+        const price = +document.getElementById("productPrice").value;
+        const qty = +document.getElementById("productQty").value;
+        if (!name) {
+          alert("ادخل اسم المنتج");
+          return;
         }
-      });
+        products.push({ name, price, qty });
+        document.getElementById("productName").value = "";
+        document.getElementById("productPrice").value = "";
+        document.getElementById("productQty").value = "";
+        renderProducts();
+        saveData();
+      };
 
-      // المشتريات
-      purchases.forEach((p) => {
-        if (p.customer === customer.name) {
-          rows.push({
-            date: p.date,
-            desc: "فاتورة شراء",
-            debit: p.paid,
-            credit: p.qty * p.price,
-          });
+      // ==================== Sales ====================
+      function addInvoiceItem() {
+        const container = document.getElementById("invoiceItems");
+        if (!products.length) {
+          alert("أضف منتجات أولاً");
+          return;
         }
-      });
+        container.innerHTML += `
+    <div class="form-row">
+      <select class="itemProduct">${products.map((p, i) => `<option value="${i}">${p.name}</option>`).join("")}</select>
+      <input class="itemQty" type="number" placeholder="الكمية" min="1" />
+    </div>`;
+      }
 
-      // القبض
-      incomes.forEach((i) => {
-        if (i.customer === customer.name) {
+      function renderSales() {
+        const tbody = document.getElementById("salesTable");
+        tbody.innerHTML = "";
+        sales.forEach((s) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${s.customer}</td><td>${s.total.toFixed(2)}</td><td>${s.paid.toFixed(2)}</td><td>${s.remaining.toFixed(2)}</td><td>${s.date}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("addInvoiceItemBtn").onclick = addInvoiceItem;
+
+      document.getElementById("saveSaleBtn").onclick = function () {
+        const container = document.getElementById("invoiceItems");
+        const paidAmount = +document.getElementById("paidAmount").value || 0;
+        const customerIndex = document.getElementById("invoiceCustomer").value;
+        const customer = customerIndex !== "" ? customers[customerIndex] : null;
+
+        let total = 0;
+        const itemProducts = container.querySelectorAll(".itemProduct");
+        const itemQtys = container.querySelectorAll(".itemQty");
+
+        if (!itemProducts.length) {
+          alert("أضف أصناف الفاتورة");
+          return;
+        }
+
+        itemProducts.forEach((sel, i) => {
+          let qty = +itemQtys[i].value;
+          const p = products[sel.value];
+          if (!p) return;
+          if (qty > p.qty) qty = p.qty;
+          p.qty -= qty;
+          total += qty * p.price;
+        });
+
+        if (customer) customer.balance += total - paidAmount;
+        cash.income += paidAmount;
+
+        sales.push({
+          customer: customer ? customer.name : "نقدي",
+          total,
+          paid: paidAmount,
+          remaining: total - paidAmount,
+          date: new Date().toLocaleDateString(),
+        });
+
+        container.innerHTML = "";
+        document.getElementById("paidAmount").value = "";
+        renderSales();
+        renderProducts();
+        renderCash();
+        renderCashStatement();
+        saveData();
+      };
+
+      // ==================== Purchases ====================
+      function renderPurchases() {
+        const tbody = document.getElementById("purchasesTable");
+        tbody.innerHTML = "";
+        purchases.forEach((p) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${p.customer}</td><td>${p.product}</td><td>${p.qty}</td><td>${p.price.toFixed(2)}</td><td>${p.paid.toFixed(2)}</td><td>${p.remaining.toFixed(2)}</td><td>${p.date}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("savePurchaseBtn").onclick = function () {
+        const prod = products[document.getElementById("purchaseProduct").value];
+        const qty = +document.getElementById("purchaseQty").value;
+        const price = +document.getElementById("purchasePrice").value;
+        const paid = +document.getElementById("purchasePaid").value;
+        const customerIndex = document.getElementById("purchaseCustomer").value;
+        const customer = customerIndex !== "" ? customers[customerIndex] : null;
+
+        if (!prod) {
+          alert("اختر المنتج");
+          return;
+        }
+
+        prod.qty += qty;
+        if (customer) customer.balance -= qty * price;
+        cash.income -= paid;
+
+        purchases.push({
+          product: prod.name,
+          qty,
+          price,
+          paid,
+          customer: customer ? customer.name : "نقدي",
+          remaining: qty * price - paid,
+          date: new Date().toLocaleDateString(),
+        });
+
+        document.getElementById("purchaseQty").value = "";
+        document.getElementById("purchasePrice").value = "";
+        document.getElementById("purchasePaid").value = "";
+        document.getElementById("purchaseCustomer").value = "";
+        renderPurchases();
+        renderProducts();
+        renderCash();
+        renderCashStatement();
+        saveData();
+      };
+
+      // ==================== Incomes ====================
+      function renderIncome() {
+        const tbody = document.getElementById("incomeTable");
+        tbody.innerHTML = "";
+        incomes.forEach((i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${i.title}</td><td>${i.amount.toFixed(2)}</td><td>${i.customer}</td><td>${i.date}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("addIncomeBtn").onclick = function () {
+        const title = document.getElementById("incomeTitle").value.trim();
+        const amount = +document.getElementById("incomeAmount").value;
+        const customerIndex = document.getElementById("incomeCustomer").value;
+        const customer = customerIndex !== "" ? customers[customerIndex] : null;
+
+        if (!title || !amount) {
+          alert("اكمل البيانات");
+          return;
+        }
+
+        if (customer) customer.balance -= amount;
+        cash.income += amount;
+
+        incomes.push({
+          title,
+          amount,
+          customer: customer ? customer.name : "نقدي",
+          date: new Date().toLocaleDateString(),
+        });
+
+        document.getElementById("incomeTitle").value = "";
+        document.getElementById("incomeAmount").value = "";
+        document.getElementById("incomeCustomer").value = "";
+        renderIncome();
+        renderCash();
+        renderCashStatement();
+        saveData();
+      };
+
+      // ==================== Expenses ====================
+      function renderExpenses() {
+        const tbody = document.getElementById("expenseTable");
+        tbody.innerHTML = "";
+        expenses.forEach((e) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${e.title}</td><td>${e.amount.toFixed(2)}</td><td>${e.customer}</td><td>${e.date}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById("addExpenseBtn").onclick = function () {
+        const title = document.getElementById("expenseTitle").value.trim();
+        const amount = +document.getElementById("expenseAmount").value;
+        const customerIndex = document.getElementById("expenseCustomer").value;
+        const customer = customerIndex !== "" ? customers[customerIndex] : null;
+
+        if (!title || !amount) {
+          alert("اكمل البيانات");
+          return;
+        }
+
+        if (customer) customer.balance += amount;
+        cash.expenses += amount;
+
+        expenses.push({
+          title,
+          amount,
+          customer: customer ? customer.name : "نقدي",
+          date: new Date().toLocaleDateString(),
+        });
+
+        document.getElementById("expenseTitle").value = "";
+        document.getElementById("expenseAmount").value = "";
+        document.getElementById("expenseCustomer").value = "";
+        renderExpenses();
+        renderCash();
+        renderCashStatement();
+        renderCustomerSelects();
+        saveData();
+      };
+
+      // ==================== Cash ====================
+      function renderCash() {
+        document.getElementById("cashOpening").innerText = (
+          cash.opening || 0
+        ).toFixed(2);
+        document.getElementById("cashIncome").innerText = (
+          cash.income || 0
+        ).toFixed(2);
+        document.getElementById("cashExpenses").innerText = (
+          cash.expenses || 0
+        ).toFixed(2);
+        document.getElementById("cashFinal").innerText = (
+          (cash.opening || 0) +
+          (cash.income || 0) -
+          (cash.expenses || 0)
+        ).toFixed(2);
+      }
+
+      function renderCashStatement() {
+        const tbody = document.getElementById("cashStatementTable");
+        tbody.innerHTML = "";
+        let balance = cash.opening || 0;
+        let rows = [];
+
+        // Sales (paid)
+        sales.forEach((s) => {
+          if (s.paid > 0)
+            rows.push({
+              date: s.date,
+              desc: `مبيعات (${s.customer})`,
+              debit: s.paid,
+              credit: 0,
+            });
+        });
+        // Purchases (paid)
+        purchases.forEach((p) => {
+          if (p.paid > 0)
+            rows.push({
+              date: p.date,
+              desc: `مشتريات (${p.product})`,
+              debit: 0,
+              credit: p.paid,
+            });
+        });
+        // Incomes
+        incomes.forEach((i) => {
           rows.push({
             date: i.date,
-            desc: "قبض",
-            debit: 0,
-            credit: i.amount,
+            desc: `قبض (${i.title})`,
+            debit: i.amount,
+            credit: 0,
           });
-        }
-      });
-
-      // الصرف
-      expenses.forEach((e) => {
-        if (e.customer === customer.name) {
+        });
+        // Expenses
+        expenses.forEach((e) => {
           rows.push({
             date: e.date,
-            desc: "صرف",
-            debit: e.amount,
-            credit: 0,
-          });
-        }
-      });
-
-      // فلترة بالتاريخ
-      if (from) rows = rows.filter((r) => new Date(r.date) >= new Date(from));
-      if (to) rows = rows.filter((r) => new Date(r.date) <= new Date(to));
-
-      rows.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      rows.forEach((r) => {
-        balance += r.debit - r.credit;
-        tbody.innerHTML += `
-      <tr>
-        <td>${r.date}</td>
-        <td>${r.desc}</td>
-        <td>${r.debit ? r.debit.toFixed(2) : "-"}</td>
-        <td>${r.credit ? r.credit.toFixed(2) : "-"}</td>
-        <td>${balance.toFixed(2)}</td>
-      </tr>
-    `;
-      });
-
-      // الرصيد الحالي (مطابق لصفحة العملاء)
-      tbody.innerHTML += `
-    <tr style="font-weight:bold;background:#f2f2f2">
-      <td>-</td>
-      <td>الرصيد الحالي</td>
-      <td>-</td>
-      <td>-</td>
-      <td>${customer.balance.toFixed(2)}</td>
-    </tr>
-  `;
-    }
-
-    function renderCashStatement() {
-      const tbody = document.getElementById("cashStatementTable");
-      if (!tbody) return;
-
-      tbody.innerHTML = "";
-
-      let balance = cash.opening || 0;
-
-      // الرصيد الافتتاحي
-      tbody.innerHTML += `
-    <tr>
-      <td>-</td>
-      <td>الرصيد الافتتاحي</td>
-      <td>-</td>
-      <td>-</td>
-      <td>${balance.toFixed(2)}</td>
-    </tr>
-  `;
-
-      let rows = [];
-
-      // المبيعات (المقبوض فقط)
-      sales.forEach((s) => {
-        if (s.paid > 0) {
-          rows.push({
-            date: s.date,
-            desc: `مبيعات (${s.customer})`,
-            debit: s.paid,
-            credit: 0,
-          });
-        }
-      });
-
-      // المشتريات (المدفوع)
-      purchases.forEach((p) => {
-        if (p.paid > 0) {
-          rows.push({
-            date: p.date,
-            desc: `مشتريات (${p.product})`,
+            desc: `صرف (${e.title})`,
             debit: 0,
-            credit: p.paid,
+            credit: e.amount,
           });
-        }
-      });
-
-      // المقبوضات
-      incomes.forEach((i) => {
-        rows.push({
-          date: i.date,
-          desc: `قبض (${i.title})`,
-          debit: i.amount,
-          credit: 0,
         });
-      });
 
-      // المصروفات
-      expenses.forEach((e) => {
-        rows.push({
-          date: e.date,
-          desc: `صرف (${e.title})`,
-          debit: 0,
-          credit: e.amount,
-        });
-      });
+        rows.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-      // ترتيب زمني
-      rows.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      // عرض الحركات
-      rows.forEach((r) => {
-        balance += r.debit - r.credit;
-        tbody.innerHTML += `
-      <tr>
-        <td>${r.date}</td>
-        <td>${r.desc}</td>
-        <td>${r.debit ? r.debit.toFixed(2) : "-"}</td>
-        <td>${r.credit ? r.credit.toFixed(2) : "-"}</td>
-        <td>${balance.toFixed(2)}</td>
-      </tr>
-    `;
-      });
-
-      // الرصيد الختامي
-      tbody.innerHTML += `
-    <tr style="font-weight:bold;background:#f2f2f2">
-      <td>-</td>
-      <td>الرصيد الختامي</td>
-      <td>-</td>
-      <td>-</td>
+        rows.forEach((r) => {
+          balance += r.debit - r.credit;
+          tbody.innerHTML += `<tr>
+      <td>${r.date}</td>
+      <td>${r.desc}</td>
+      <td>${r.debit ? r.debit.toFixed(2) : "-"}</td>
+      <td>${r.credit ? r.credit.toFixed(2) : "-"}</td>
       <td>${balance.toFixed(2)}</td>
-    </tr>
-  `;
-    }
+    </tr>`;
+        });
 
-    function isMobile() {
-      return window.innerWidth < 992; // أقل من 992px يعتبر موبايل / تابليت
-    }
-
-    document.addEventListener("touchend", (e) => {
-      if (!isMobile()) return; // على الكمبيوتر تجاهل السحب
-      touchEndX = e.changedTouches[0].screenX;
-      const threshold = 50;
-      if (touchStartX - touchEndX > threshold) {
-        sidebar.classList.add("open");
-      } else if (touchEndX - touchStartX > threshold) {
-        sidebar.classList.remove("open");
+        tbody.innerHTML += `<tr style="font-weight:bold;background:#f2f2f2">
+    <td>-</td><td>الرصيد الختامي</td><td>-</td><td>-</td><td>${balance.toFixed(2)}</td>
+  </tr>`;
       }
-    });
 
+      // ==================== Customer Statement ====================
+      function renderCustomerStatement() {
+        const customerIndex =
+          document.getElementById("statementCustomer").value;
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        if (customerIndex === "") {
+          alert("اختر العميل");
+          return;
+        }
+        const customer = customers[customerIndex];
+        const tbody = document.getElementById("customerStatementTable");
+        tbody.innerHTML = "";
 
-  </script>
-</body>
+        let balance = customer.openingBalance || 0;
+        tbody.innerHTML += `<tr><td>-</td><td>رصيد افتتاحي</td><td>-</td><td>-</td><td>${balance.toFixed(2)}</td></tr>`;
 
+        let rows = [];
+
+        // Sales
+        sales.forEach((s) => {
+          if (s.customer === customer.name)
+            rows.push({
+              date: s.date,
+              desc: "فاتورة بيع",
+              debit: s.total,
+              credit: s.paid,
+            });
+        });
+        // Purchases
+        purchases.forEach((p) => {
+          if (p.customer === customer.name)
+            rows.push({
+              date: p.date,
+              desc: "فاتورة شراء",
+              debit: p.paid,
+              credit: p.qty * p.price,
+            });
+        });
+        // Incomes
+        incomes.forEach((i) => {
+          if (i.customer === customer.name)
+            rows.push({
+              date: i.date,
+              desc: "قبض",
+              debit: 0,
+              credit: i.amount,
+            });
+        });
+        // Expenses
+        expenses.forEach((e) => {
+          if (e.customer === customer.name)
+            rows.push({
+              date: e.date,
+              desc: "صرف",
+              debit: e.amount,
+              credit: 0,
+            });
+        });
+
+        if (from) rows = rows.filter((r) => new Date(r.date) >= new Date(from));
+        if (to) rows = rows.filter((r) => new Date(r.date) <= new Date(to));
+
+        rows.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        rows.forEach((r) => {
+          balance += r.debit - r.credit;
+          tbody.innerHTML += `<tr>
+      <td>${r.date}</td>
+      <td>${r.desc}</td>
+      <td>${r.debit ? r.debit.toFixed(2) : "-"}</td>
+      <td>${r.credit ? r.credit.toFixed(2) : "-"}</td>
+      <td>${balance.toFixed(2)}</td>
+    </tr>`;
+        });
+
+        tbody.innerHTML += `<tr style="font-weight:bold;background:#f2f2f2">
+    <td>-</td><td>الرصيد الحالي</td><td>-</td><td>-</td><td>${customer.balance.toFixed(2)}</td>
+  </tr>`;
+      }
+
+      // ==================== Initialization ====================
+      window.onload = function () {
+        loadData();
+        showSection("aboutSec");
+        renderCustomerSelects();
+        renderCustomers();
+        renderProducts();
+        renderSales();
+        renderPurchases();
+        renderIncome();
+        renderExpenses();
+        renderCash();
+        renderCashStatement();
+      };
+    </script>
+  </body>
 </html>
